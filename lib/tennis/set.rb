@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'tennis/game'
+
 module Tennis
   class Set
     attr_reader :points, :current_game
@@ -20,15 +22,19 @@ module Tennis
       end
     end
 
-    def completed?
+    def complete?
       (points.max >= 6 && (points[0] - points[1]).abs > 1) || points.max == 7
     end
 
-    private
+    def winner_id
+      points.index(points.max) if complete?
+    end
 
     def tie_break?
       points.uniq.count == 1 && points[0] == 6
     end
+
+    private
 
     def create_new_game
       @current_game = Game.new(tie_break: tie_break?)

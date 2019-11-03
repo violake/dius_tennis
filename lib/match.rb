@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'tennis/game'
+require 'tennis/set'
+
 class Match
   attr_reader :players, :set, :current_game
 
@@ -7,75 +10,38 @@ class Match
 
   def initialize(player1_name, player2_name)
     @players = [player1_name, player2_name]
-    @set = [0, 0]
-    @games = []
-    @current_game = nil
+    @set = Tennis::Set.new
   end
 
   def point_won_by(player_name)
-    raise StandardError, 'Match is over!' if set_complete?
+    raise StandardError, 'Match is over!' if set.complete?
 
-    add_game_point(players.index(player_name))
-
-    update_set
+    set.add_game_point(players.index(player_name))
   end
 
   def score
-    if set_complete?
-      set.join('-') + ", #{players[set.index(set.max)]} win"
-    elsif current_game
-      set.join('-') + ', ' + current_game_to_s
+    if set.complete?
+      set.points.join('-') + ", #{players[set.winner_id]} win"
+    elsif set.current_game
+      set.points.join('-') + ', ' + current_game_score(set.current_game.points)
     else
-      set.join('-')
+      set.points.join('-')
     end
   end
 
   private
 
-  def add_game_point(player_id)
-    @current_game || create_new_game
-    @current_game[player_id] += 1
+  def current_game_score(game)
+    set.tie_break? ? game.join('-') : game_score(game)
   end
 
-  def update_set
-    if current_game_complete?
-      set[current_game.index(current_game.max)] += 1
-      @current_game = nil
-    end
-  end
-
-  def set_complete?
-    set.max >= 6 && (set[0] - set[1]).abs > 1 || set.max == 7
-  end
-
-  def tie_break?
-    set.uniq.count == 1 && set[0] == 6
-  end
-
-  def current_game_complete?
-    tie_break? ? game_complete?(7) : game_complete?(4)
-  end
-
-  def game_complete?(game_point)
-    current_game && current_game.max >= game_point && (current_game[0] - current_game[1]).abs > 1
-  end
-
-  def create_new_game
-    @current_game = [0, 0]
-    @games << @current_game
-  end
-
-  def current_game_to_s
-    tie_break? ? current_game.join('-') : game_to_s
-  end
-
-  def game_to_s
-    if current_game.uniq.count == 1 && current_game[0] >= 3
+  def game_score(game)
+    if game.uniq.count == 1 && game[0] >= 3
       'Deuce'
-    elsif current_game.max > 3 && (current_game[0] - current_game[1]).abs == 1
-      "Advantage #{players[current_game.index(current_game.max)]}"
+    elsif game.max > 3 && (game[0] - game[1]).abs == 1
+      "Advantage #{players[game.index(game.max)]}"
     else
-      current_game.map { |point| GAME_POINT_NAMES[point] }.join('-')
+      game.map { |point| GAME_POINT_NAMES[point] }.join('-')
     end
   end
 end

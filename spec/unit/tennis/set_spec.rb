@@ -49,7 +49,7 @@ describe Tennis::Set do
         set_add_complete_games(subject, player2_id, 3)
       end
 
-      it { expect(subject.completed?).to eq false }
+      it { expect(subject.complete?).to eq false }
     end
 
     context 'set point reaches winning point(6) but diff = 1' do
@@ -58,7 +58,7 @@ describe Tennis::Set do
         set_add_complete_games(subject, player2_id, 6)
       end
 
-      it { expect(subject.completed?).to eq false }
+      it { expect(subject.complete?).to eq false }
     end
 
     context 'set point reaches winning point(6) but diff > 1' do
@@ -67,7 +67,7 @@ describe Tennis::Set do
         set_add_complete_games(subject, player2_id, 6)
       end
 
-      it { expect(subject.completed?).to eq true }
+      it { expect(subject.complete?).to eq true }
     end
 
     context 'set point reaches final winning point(7)' do
@@ -78,7 +78,46 @@ describe Tennis::Set do
         set_add_game_point(subject, player1_id, 7)
       end
 
-      it { expect(subject.completed?).to eq true }
+      it { expect(subject.complete?).to eq true }
+    end
+  end
+
+  describe 'winner_id' do
+    context 'set complete' do
+      before do
+        set_add_complete_games(subject, player1_id, 6)
+      end
+
+      it { expect(subject.winner_id).to eq 0 }
+    end
+
+    context 'set not complete' do
+      before do
+        set_add_complete_games(subject, player1_id, 3)
+      end
+
+      it { expect(subject.winner_id).to be_nil }
+    end
+  end
+
+  describe 'tie_break?' do
+    context 'set points [6,6]' do
+      before do
+        set_add_complete_games(subject, player1_id, 5)
+        set_add_complete_games(subject, player2_id, 6)
+        set_add_complete_games(subject, player1_id, 1)
+      end
+
+      it { expect(subject.tie_break?).to eq true }
+    end
+
+    context 'set points [5,6]' do
+      before do
+        set_add_complete_games(subject, player1_id, 5)
+        set_add_complete_games(subject, player2_id, 6)
+      end
+
+      it { expect(subject.tie_break?).to eq false }
     end
   end
 
