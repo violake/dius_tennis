@@ -8,6 +8,17 @@ describe Tennis::PointPair do
 
   subject { described_class.new }
 
+  context 'points' do
+    before { subject.add_one_point(0) }
+
+    it { expect(subject.points[0]).to eq 1 }
+
+    it 'should not be readonly' do
+      subject.points[0] += 1
+      expect(subject.points[0]).to eq 1
+    end
+  end
+
   context 'add_one_point' do
     before { subject.add_one_point(0) }
 

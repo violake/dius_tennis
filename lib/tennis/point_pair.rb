@@ -2,34 +2,36 @@
 
 module Tennis
   class PointPair
-    attr_reader :points
-
     def initialize
       @points = [0, 0]
     end
 
+    def points
+      @points.dup
+    end
+
     def add_one_point(id)
-      points[id] += 1
+      @points[id] += 1
     end
 
     def reach(value)
-      points.max >= value
+      @points.max >= value
     end
 
     def same_point?
-      points.uniq.count == 1
+      @points.uniq.count == 1
     end
 
     def large_point_id
-      points.index(points.max)
+      @points.index(points.max)
     end
 
     def diff
-      (points[0] - points[1]).abs
+      (@points[0] - @points[1]).abs
     end
 
     def to_s
-      points.join('-')
+      @points.join('-')
     end
   end
 end
