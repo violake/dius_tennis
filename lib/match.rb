@@ -14,6 +14,8 @@ class Match
 
   def point_won_by(player_name)
     add_game_point(players.index(player_name))
+
+    update_set
   end
 
   def score
@@ -29,6 +31,17 @@ class Match
   def add_game_point(player_id)
     @current_game || create_new_game
     @current_game[player_id] += 1
+  end
+
+  def update_set
+    if current_game_complete?
+      set[current_game.index(current_game.max)] += 1
+      @current_game = nil
+    end
+  end
+
+  def current_game_complete?
+    current_game && current_game.max >= 4 && (current_game[0] - current_game[1]).abs > 1
   end
 
   def create_new_game
