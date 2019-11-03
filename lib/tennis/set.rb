@@ -6,6 +6,8 @@ module Tennis
   class Set
     attr_reader :points, :current_game
 
+    SET_WINNING_POINT = 6
+
     def initialize
       @points = [0, 0]
       @games = []
@@ -23,18 +25,19 @@ module Tennis
     end
 
     def complete?
-      (points.max >= 6 && (points[0] - points[1]).abs > 1) || points.max == 7
+      (points.max >= SET_WINNING_POINT && (points[0] - points[1]).abs > 1) ||
+        points.max == SET_WINNING_POINT + 1
     end
 
     def winner_id
       points.index(points.max) if complete?
     end
 
-    def tie_break?
-      points.uniq.count == 1 && points[0] == 6
-    end
-
     private
+
+    def tie_break?
+      points.uniq.count == 1 && points[0] == SET_WINNING_POINT
+    end
 
     def create_new_game
       @current_game = Game.new(tie_break: tie_break?)

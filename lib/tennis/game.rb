@@ -2,12 +2,13 @@
 
 module Tennis
   class Game
-    attr_reader :points, :winning_point
+    attr_reader :points, :winning_point, :tie_break
 
     WINNING_POINT = 4
     TIE_BREAK_WINNING_POINT = 7
 
     def initialize(tie_break: false)
+      @tie_break = tie_break
       @winning_point = tie_break ? TIE_BREAK_WINNING_POINT : WINNING_POINT
       @points = [0, 0]
     end

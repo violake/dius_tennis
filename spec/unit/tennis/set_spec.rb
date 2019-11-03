@@ -108,7 +108,7 @@ describe Tennis::Set do
         set_add_complete_games(subject, player1_id, 1)
       end
 
-      it { expect(subject.tie_break?).to eq true }
+      it { expect(subject.send('tie_break?')).to eq true }
     end
 
     context 'set points [5,6]' do
@@ -117,7 +117,7 @@ describe Tennis::Set do
         set_add_complete_games(subject, player2_id, 6)
       end
 
-      it { expect(subject.tie_break?).to eq false }
+      it { expect(subject.send('tie_break?')).to eq false }
     end
   end
 
