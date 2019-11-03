@@ -29,7 +29,7 @@ class Match
   private
 
   def winning_score
-    set.points.join('-') + ", #{players[set.winner_id]} win" if complete?
+    "#{set.point_pair}, #{players[set.winner_id]} win" if complete?
   end
 
   def complete?
@@ -37,24 +37,24 @@ class Match
   end
 
   def set_and_game_score
-    set.points.join('-') + if set.current_game
-                             ', ' + current_game_score(set.current_game)
-                           else
-                             ''
-                           end
+    set.point_pair.to_s + if set.current_game
+                            ", #{current_game_score(set.current_game)}"
+                          else
+                            ''
+                          end
   end
 
   def current_game_score(game)
-    game.tie_break ? game.points.join('-') : game_score(game.points)
+    game.tie_break ? game.point_pair : ordinary_game_score(game.point_pair)
   end
 
-  def game_score(game)
-    if game.uniq.count == 1 && game[0] >= 3
+  def ordinary_game_score(game_point_pair)
+    if game_point_pair.same_point? && game_point_pair.reach(3)
       DEUCE
-    elsif game.max > 3 && (game[0] - game[1]).abs == 1
-      "#{ADVANTAGE} #{players[game.index(game.max)]}"
+    elsif game_point_pair.reach(4) && game_point_pair.diff == 1
+      "#{ADVANTAGE} #{players[game_point_pair.large_point_id]}"
     else
-      game.map { |point| GAME_POINT_NAMES[point] }.join('-')
-    end
+      game_point_pair.points.map { |point| GAME_POINT_NAMES[point] }.join('-')
+    end.to_s
   end
 end

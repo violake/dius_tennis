@@ -1,17 +1,19 @@
 # frozen_string_literal: true
 
-require 'tennis/game'
-
 module Tennis
   class Set
-    attr_reader :points, :current_game
+    attr_reader :point_pair, :current_game
 
     SET_WINNING_POINT = 6
 
     def initialize
-      @points = [0, 0]
+      @point_pair = PointPair.new
       @games = []
       @current_game = nil
+    end
+
+    def points
+      point_pair.points
     end
 
     def add_game_point(point_id)
@@ -19,24 +21,24 @@ module Tennis
       current_game.add_point(point_id)
 
       if current_game.complete?
-        points[current_game.winner_id] += 1
+        point_pair.add_one_point(current_game.winner_id)
         @current_game = nil
       end
     end
 
     def complete?
-      (points.max >= SET_WINNING_POINT && (points[0] - points[1]).abs > 1) ||
-        points.max == SET_WINNING_POINT + 1
+      (point_pair.reach(SET_WINNING_POINT) && point_pair.diff > 1) ||
+        point_pair.reach(SET_WINNING_POINT + 1)
     end
 
     def winner_id
-      points.index(points.max) if complete?
+      point_pair.large_point_id if complete?
     end
 
     private
 
     def tie_break?
-      points.uniq.count == 1 && points[0] == SET_WINNING_POINT
+      point_pair.points.all? { |point| point == SET_WINNING_POINT }
     end
 
     def create_new_game
