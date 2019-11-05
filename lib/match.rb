@@ -2,6 +2,7 @@
 
 require 'tennis/game'
 require 'tennis/set'
+require 'tennis/point_pair'
 
 class Match
   attr_reader :players, :set, :current_game
