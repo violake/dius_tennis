@@ -87,7 +87,7 @@ describe Tennis::Game do
   end
 
   describe 'tie break game' do
-    subject { described_class.new(tie_break: true) }
+    subject { described_class.new(described_class::TIE_BREAK_WINNING_POINT) }
 
     context 'game should not complete as ordinary game' do
       before do

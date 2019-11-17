@@ -15,6 +15,10 @@ bundle exec rspec
 bundle exec rubocop
 
 # usage
+irb
+$LOAD_PATH.unshift('./lib')
+require 'match'
+
 match = Match.new('player_1', 'player_2')
 match.point_won_by('player_1')
 match.point_won_by('player_2')

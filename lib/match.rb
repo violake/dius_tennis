@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require 'tennis/game'
 require 'tennis/set'
-require 'tennis/point_pair'
 
 class Match
   attr_reader :players, :set, :current_game
@@ -46,7 +44,7 @@ class Match
   end
 
   def current_game_score(game)
-    game.tie_break ? game.point_pair : ordinary_game_score(game.point_pair)
+    game.tie_break? ? game.point_pair : ordinary_game_score(game.point_pair)
   end
 
   def ordinary_game_score(game_point_pair)

@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'tennis/game'
+require 'tennis/point_pair'
+
 module Tennis
   class Set
     attr_reader :point_pair, :current_game
@@ -42,7 +45,7 @@ module Tennis
     end
 
     def create_new_game
-      @current_game = Game.new(tie_break: tie_break?)
+      @current_game = tie_break? ? Game.new(Game::TIE_BREAK_WINNING_POINT) : Game.new 
       @games << current_game
     end
   end

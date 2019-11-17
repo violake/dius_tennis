@@ -1,15 +1,16 @@
 # frozen_string_literal: true
 
+require 'tennis/point_pair'
+
 module Tennis
   class Game
-    attr_reader :point_pair, :winning_point, :tie_break
+    attr_reader :point_pair, :winning_point
 
-    WINNING_POINT = 4
+    ORDINARY_WINNING_POINT = 4
     TIE_BREAK_WINNING_POINT = 7
 
-    def initialize(tie_break: false)
-      @tie_break = tie_break
-      @winning_point = tie_break ? TIE_BREAK_WINNING_POINT : WINNING_POINT
+    def initialize(winning_point = ORDINARY_WINNING_POINT)
+      @winning_point = winning_point
       @point_pair = PointPair.new
     end
 
@@ -27,6 +28,10 @@ module Tennis
 
     def winner_id
       point_pair.large_point_id if complete?
+    end
+
+    def tie_break?
+      winning_point != ORDINARY_WINNING_POINT
     end
   end
 end
