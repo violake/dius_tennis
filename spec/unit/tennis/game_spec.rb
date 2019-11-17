@@ -4,13 +4,14 @@ require 'spec_helper'
 require 'tennis/game'
 
 describe Tennis::Game do
+  let(:players) { %w[a b] }
   let(:player1_id) { 0 }
   let(:player2_id) { 1 }
 
   describe 'ordinary game' do
     subject { described_class.new }
 
-    describe 'add point' do
+    describe 'game on going' do
       context 'game start' do
         before do
           subject.add_point(player1_id)
@@ -19,6 +20,7 @@ describe Tennis::Game do
 
         it { expect(subject.points).to eq [2, 0] }
         it { expect(subject.complete?).to eq false }
+        it { expect(subject.score(players)).to eq '30-0' }
       end
 
       context 'game points reaches winning point(4) but diff = 1' do
@@ -30,6 +32,7 @@ describe Tennis::Game do
 
         it { expect(subject.points).to eq [4, 3] }
         it { expect(subject.complete?).to eq false }
+        it { expect(subject.score(players)).to eq "Advantage #{players[player1_id]}" }
       end
 
       context 'game points is above winning point but diff = 1' do
@@ -37,12 +40,12 @@ describe Tennis::Game do
           game_add_point(subject, player1_id, 3)
           game_add_point(subject, player2_id, 3)
           game_add_point(subject, player1_id, 1)
-          game_add_point(subject, player2_id, 1)
-          game_add_point(subject, player1_id, 1)
+          game_add_point(subject, player2_id, 2)
         end
 
-        it { expect(subject.points).to eq [5, 4] }
+        it { expect(subject.points).to eq [4, 5] }
         it { expect(subject.complete?).to eq false }
+        it { expect(subject.score(players)).to eq "Advantage #{players[player2_id]}" }
       end
 
       context 'game points reaches winning point and diff > 1' do
@@ -97,6 +100,7 @@ describe Tennis::Game do
 
       it { expect(subject.points).to eq [2, 4] }
       it { expect(subject.complete?).to eq false }
+      it { expect(subject.score(players)).to eq '2-4' }
     end
 
     context 'points reaches winning point(7) and diff = 1' do
@@ -107,6 +111,7 @@ describe Tennis::Game do
 
       it { expect(subject.points).to eq [6, 7] }
       it { expect(subject.complete?).to eq false }
+      it { expect(subject.score(players)).to eq '6-7' }
     end
 
     context 'points is above winning point(7) and diff = 1' do
@@ -118,6 +123,7 @@ describe Tennis::Game do
 
       it { expect(subject.points).to eq [8, 7] }
       it { expect(subject.complete?).to eq false }
+      it { expect(subject.score(players)).to eq '8-7' }
     end
 
     context 'points reaches winning point(7) and diff > 1' do

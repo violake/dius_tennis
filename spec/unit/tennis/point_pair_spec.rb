@@ -34,15 +34,6 @@ describe Tennis::PointPair do
     it { expect(subject.reach(value + 1)).to be_falsey }
   end
 
-  context 'same_point?' do
-    before do
-      value.times { subject.add_one_point(0) }
-      value.times { subject.add_one_point(1) }
-    end
-
-    it { expect(subject.same_point?).to be_truthy }
-  end
-
   context 'large_point_id' do
     before do
       value.times { subject.add_one_point(0) }

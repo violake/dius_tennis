@@ -18,10 +18,6 @@ module Tennis
       @points.max >= value
     end
 
-    def same_point?
-      @points.uniq.count == 1
-    end
-
     def large_point_id
       @points.index(points.max)
     end
