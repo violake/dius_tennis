@@ -3,7 +3,7 @@
 require 'tennis/set'
 
 class Match
-  attr_reader :players, :set, :current_game
+  attr_reader :players, :set
 
   MATCH_OVER_ERROR = 'Match is over!'
 
@@ -32,9 +32,13 @@ class Match
     set.complete?
   end
 
+  def current_game
+    set.current_game
+  end
+
   def set_and_game_score
-    set.point_pair.to_s + if set.current_game
-                            ", #{set.current_game.score(players)}"
+    set.point_pair.to_s + if current_game
+                            ", #{current_game.score(players)}"
                           else
                             ''
                           end
